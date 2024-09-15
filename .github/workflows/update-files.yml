@@ -1,0 +1,29 @@
+name: Update File List
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-file-list:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Generate file list
+        run: |
+          echo "const files = [" > js/index.js
+          for file in app_tvbox/*; do
+            echo "    '${file}'," >> js/index.js
+          done
+          echo "];" >> js/index.js
+
+      - name: Commit changes
+        run: |
+          git config --local user.name "github-actions"
+          git config --local user.email "github-actions@github.com"
+          git add js/index.js
+          git commit -m "Update file list" || echo "No changes"
+          git push
