@@ -1,9 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const fileList = document.getElementById('fileList');
-    const repo = 'gjpanhtv/gjpanhtv.github.io'; // Thay đổi tên tài khoản và tên repo
+    const repo = 'gjpanhtv/gjpanhtv.github.io'; // Tên tài khoản và tên repo
 
     fetch(`https://api.github.com/repos/${repo}/contents/app_tvbox`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(files => {
             files.forEach(file => {
                 if (file.type === 'file') {
@@ -14,6 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         })
         .catch(err => {
-            console.error('error:', err);
+            console.error('Error:', err);
         });
 });
